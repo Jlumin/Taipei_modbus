@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 11 16:30:17 2019
+
+@author: Luming
+"""
+
 #!/usr/bin/env python
 #
 # Available device: Liquid level sensor
@@ -13,8 +20,12 @@ from statistics import median
 import minimalmodbus
 import time
 from time import gmtime, strftime
+import os
+import shutil
 # from urllib.request import urlopen
-from urllib2 import urlopen
+from urllib.request import urlopen
+
+
 
 # Definition of variable
 minimalmodbus.BAUDRATE = 19200
@@ -99,14 +110,28 @@ def httpPOST(String0, String1, String2, String3):
         resp = urlopen(url).read()
         print(resp)
         print('------------------------')
-    
+def error_resend():
+    op_path_ls=os.listdir("/home/pi/msd/")
+    op_path = "/home/pi/msd/"+str(op_path_ls[0])
+    er= f.readline(op_path)
+    if len(er)==0:
+        print('no_error_data')
+    else:
+        httpPOST(er[0]) 
+    shutil.rmtree(op_path)
+
+# open the error file
+if not os.path.isdir("./msd"):
+    os.mkdir("./msd")   
+#main function
+slope=input('input the slope:')
+intercept=input('input the intercept:')
+data1 = wLRead(slope, intercept)
+data2 = 0
+with open("/home/pi/"+"%y%m%d%H%M"+"data.log","a") as ff:
+    ff.write(strftime("%Y%m%d%H%M%S")+','+id_No+','+data1+','+data2+'\n')
 try:
     while True:
-        slope = 0.04626
-        intercept = -760.80073
-        data1 = wLRead(slope, intercept)
-        data2 = 0
-        
         while (countNum_Loop < 0):
             httpPOST(id_No, data1, data2, "Reboot")
             countNum_Loop += 1
@@ -123,6 +148,11 @@ try:
         time.sleep(60*10) # Wait for 10 mins
         
 except KeyboardInterrupt:
+    fop3 = open("/home/pi/msd/"+"%y%m%d%H%M"+"erse_data.log","a")
+    fop3.write(id_No+','+data1+','+data2+'\n')
+    fop3.close()
+    error_resend()
     print('------------------------')
     print("Stop")
     print('------------------------')
+    

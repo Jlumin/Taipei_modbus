@@ -134,8 +134,8 @@ def httpPOST(String0, String1, String2, String3):
     try:
         global timeStamp
         timeStamp = strftime("%Y%m%d%H%M%S")
-        url = 'http://ec2-54-175-179-28.compute-1.amazonaws.com/update_general.php?' + \
-              'site=Demo&' + \
+        url = 'http://www.amazonaws.com/update_general.php?' + \
+              'site=name + \
               'time='+ str(timeStamp)+ \
               '&weather=0' + \
               '&id='+ str(String0) + \
@@ -146,24 +146,7 @@ def httpPOST(String0, String1, String2, String3):
               '&field1='+str(String1)+ \
               '&field2='+str(String2)+ \
               '&field3='+repr(String3)
-        
-        url_TT ='http://data.thinktronltd.com/TCGEMSIS/GETMTDATA.aspx?' + \
-              'site=Demo&' + \
-              'time='+ str(timeStamp)+ \
-              '&weather=0' + \
-              '&id='+ str(String0) + \
-              '&air=0' + \
-              '&acceleration=0' + \
-              '&cleavage=0' + \
-              '&incline=0' + \
-              '&field1='+str(String1)+ \
-              '&field2='+str(String2)+ \
-              '&field3='+repr(String3) 
-        
-        resp = urlopen(url).read()
-        resp_TT = urlopen(url_TT).read()
-        print(resp)
-        print(resp_TT)
+       
         print('------------------------')
     except:
         print('We have an error!')
